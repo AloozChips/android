@@ -30,6 +30,7 @@
   <remove-project path="device/lineage/sepolicy" />
   <remove-project path="external/arm-optimized-routines" />
   <remove-project path="external/libjpeg-turbo" />
+  <remove-project path="external/skia" />
   <remove-project path="external/sqlite" />
   <remove-project path="frameworks/av" />
   <remove-project path="frameworks/base" />
@@ -85,6 +86,7 @@
   <!-- External  -->
   <project path="external/arm-optimized-routines" name="android_external_arm-optimized-routines" groups="pdk" remote="axion" />
   <project path="external/libjpeg-turbo" name="android_external_libjpeg-turbo" groups="pdk" remote="axion" />
+  <project path="external/skia" name="android_external_skia" groups="pdk,qcom_msm8x26" remote="axion" />
   <project path="external/sqlite" name="android_external_sqlite" groups="pdk" remote="axion" />
   <project path="toolchain/pgo-profiles" name="android_toolchain_pgo-profiles" groups="pdk" remote="axion" />
 
