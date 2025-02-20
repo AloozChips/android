@@ -1,0 +1,157 @@
+# AxionOS
+
+## Getting Started
+
+To get started with **AxionOS**, you'll need to be familiar with [Source Control Tools](https://source.android.com/setup/develop).
+
+### Initializing the Source
+
+Initialize your local repository using the AxionOS manifest:
+
+```bash
+repo init -u https://github.com/AxionAOSP/android.git -b lineage-22.1 --git-lfs
+```
+
+Then sync the source:
+
+```bash
+repo sync
+```
+
+## Build Environment Setup
+
+Make sure your build environment is properly set up by following the [LineageOS build guide](https://wiki.lineageos.org/devices/).
+
+Before building, configure the environment:
+
+```bash
+. build/envsetup.sh
+```
+
+## Device Flags
+
+Modify your device trees to inherit **LineageOS** common settings and disable **EPPE** (if applicable):
+
+```make
+TARGET_DISABLE_EPPE := true
+$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
+```
+
+### AxionOS-Specific Flags
+
+These flags are needed for About Phone section UI and GMS framework.
+
+#### 📷 Camera Flags
+
+```make
+# Define rear camera specs (multiple sensors supported)
+AXION_CAMERA_REAR_INFO := 50,48  # Example: 50MP + 48MP
+
+# Define front camera specs
+AXION_CAMERA_FRONT_INFO := 42  # Example: 42MP
+```
+
+#### 👤 Device Maintainer & Processor Info Flags
+
+```make
+# Maintainer name (use "_" for spaces, e.g., "rmp_22" → "rmp 22" in UI)
+AXION_MAINTAINER := rmp
+
+# Processor name (use "_" for spaces)
+AXION_PROCESSOR := Snapdragon_CPU_1
+```
+
+#### 🔧 Build Variant Flags
+
+By default, **GMS (Google Mobile Services)** is **enabled**. To disable it, set it to false:
+
+```make
+WITH_GMS := false
+```
+
+---
+
+### ⚡ Optional: Enabling `SCHED_DEBUG` for Kernel Scheduler Tuning
+
+For non-prebuilt/inline built kernels, you can optionally enable `CONFIG_SCHED_DEBUG` to allow AxionOS to tune scheduler behavior. This is particularly useful for AxionOS load balancing, task migration, and latency optimizations.
+
+To enable it, add/set the following to your kernel's `.config` file:
+
+```config
+CONFIG_SCHED_DEBUG=y
+```
+---
+
+## Resolving AxionOS Kernel Tuning/Performance Mode Denials
+
+Some device trees may encounter kernel tuning denials when accessing certain sysfs nodes. This is often due to differences in OEM labeling that conflict with the labels defined in **device/lineage/sepolicy**. To resolve these issues, please follow one of the two approaches below:
+
+### 1. Standard Labeling Rules
+
+For devices where you can use the standard labels, add the following **genfscon** rules to your device tree:
+
+```genfs_context
+genfscon proc /sys/vm/dirty_writeback_centisecs     u:object_r:proc_dirty:s0
+genfscon proc /sys/vm/vfs_cache_pressure            u:object_r:proc_drop_caches:s0
+genfscon proc /sys/kernel/sched_migration_cost_ns   u:object_r:proc_sched:s0
+```
+
+These rules ensure that the appropriate security contexts are applied to the sysfs nodes, allowing proper kernel tuning without triggering denials.
+
+### 2.OEM Labeling Adjustments
+If your device tree already uses different OEM labels (for example, on MediaTek devices where /sys/vm/dirty_writeback_centisecs is labeled as u:object_r:proc_vm_dirty:s0), do not reassign the label in device/sepolicy. Instead, add an allow rule in your device-specific policy to grant the necessary permissions. For instance, for MediaTek devices, include the following:
+
+```init.te
+allow init proc_vm_dirty:file rw_file_perms;
+```
+This rule permits the init process to access the file with the required read/write permissions, thereby avoiding compilation breakage caused by conflicting label definitions.
+
+Note: These is needed to assure that AxionOS kernel tunings were applied
+
+---
+
+## Building AxionOS
+
+### 🔑 Generate Private Keys
+
+Before building, generate private keys:
+
+```bash
+gk -s
+```
+
+### 📲 Lunch Command
+
+Set up the build environment for your device:
+
+```bash
+axion <device_codename>
+```
+
+### 🔄 Syncing Source
+
+After setting up the build environment and syncing the whole source, easily sync the latest source changes with:
+
+```bash
+axionSync
+```
+
+### ⚙️ Build for Fastboot Flashing (fastboot flashall)
+
+Compile the ROM with:
+
+```bash
+ax -j<count>
+```
+
+Replace `<count>` with the number of CPU threads for faster compilation (e.g., `ax -j16`).
+
+---
+
+## 📜 Credits
+
+AxionOS is built upon the hard work of the **Android Open Source Project (AOSP)** and **LineageOS** teams. Special thanks to all contributors!
+
+---
+
+🚀 Happy Building!
