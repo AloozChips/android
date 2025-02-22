@@ -131,5 +131,6 @@
   <!-- Vendor  -->
   <project path="vendor/addons" name="android_vendor_addons" remote="axion" />
   <project path="vendor/lineage" name="android_vendor_lineage" remote="axion" />
+  <project path="vendor/official_devices" name="official_devices" remote="axion" revision="main" />
   <project path="vendor/gapps" name="vendor_gapps" remote="axion-gitlab" revision="vic" />
 </manifest>
