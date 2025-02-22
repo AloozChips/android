@@ -93,16 +93,18 @@ For devices where you can use the standard labels, add the following **genfscon*
 ```genfs_context
 genfscon proc /sys/vm/dirty_writeback_centisecs     u:object_r:proc_dirty:s0
 genfscon proc /sys/vm/vfs_cache_pressure            u:object_r:proc_drop_caches:s0
-genfscon proc /sys/kernel/sched_migration_cost_ns   u:object_r:proc_sched:s0
+genfscon proc /sys/vm/dirty_ratio u:object_r:proc_dirty:s0
+genfscon proc /sys/kernel/sched_migration_cost_ns u:object_r:proc_sched:s0
 ```
 
 These rules ensure that the appropriate security contexts are applied to the sysfs nodes, allowing proper kernel tuning without triggering denials.
 
 ### 2.OEM Labeling Adjustments
-If your device tree already uses different OEM labels (for example, on MediaTek devices where /sys/vm/dirty_writeback_centisecs is labeled as u:object_r:proc_vm_dirty:s0), do not reassign the label in device/sepolicy. Instead, add an allow rule in your device-specific policy to grant the necessary permissions. For instance, for MediaTek devices, include the following:
+If your device tree already uses different OEM labels (for example, on MediaTek devices where /sys/vm/dirty_writeback_centisecs is labeled as u:object_r:proc_vm_dirty:s0, while on Qualcomm devices, /sys/vm/dirty-ratio is labeled as u:object_r:proc_dirty_ratio:s0), do not reassign the label in device/sepolicy. Instead, add an allow rule in your device-specific policy to grant the necessary permissions. For instance, for MediaTek/Qualcomm devices, include the following:
 
 ```init.te
 allow init proc_vm_dirty:file rw_file_perms;
+allow init proc_dirty_ratio:file rw_file_perms;
 ```
 This rule permits the init process to access the file with the required read/write permissions, thereby avoiding compilation breakage caused by conflicting label definitions.
 
