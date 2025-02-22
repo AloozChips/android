@@ -55,6 +55,7 @@
   <remove-project path="packages/services/Telecomm" />
   <remove-project path="packages/overlays/Lineage" />
   <remove-project path="system/core" />
+  <remove-project path="system/libhwbinder" />
   <remove-project path="system/memory/lmkd" />
   <remove-project path="toolchain/pgo-profiles" />
   <remove-project path="vendor/lineage" />
@@ -126,6 +127,7 @@
 
   <!-- System  -->
   <project path="system/core" name="android_system_core" groups="pdk" remote="axion" />
+  <project path="system/libhwbinder" name="android_system_libhwbinder" groups="pdk" remote="axion" />
   <project path="system/memory/lmkd" name="android_system_memory_lmkd" groups="pdk" remote="axion" />
 
   <!-- Vendor  -->
