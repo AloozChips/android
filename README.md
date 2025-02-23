@@ -60,15 +60,6 @@ AXION_MAINTAINER := rmp
 # Processor name (use "_" for spaces)
 AXION_PROCESSOR := Snapdragon_CPU_1
 ```
-
-#### 🔧 Build Variant Flags
-
-By default, **GMS (Google Mobile Services)** is **enabled**. To disable it, set it to false:
-
-```make
-WITH_GMS := false
-```
-
 ---
 
 ### ⚡ Optional: Enabling `SCHED_DEBUG` for Kernel Scheduler Tuning
@@ -124,10 +115,26 @@ gk -s
 
 ### 📲 Lunch Command
 
-Set up the build environment for your device:
+To configure the build environment for your device, use:
 
 ```bash
 axion <device_codename>
+```
+
+By default, the build system compiles a **vanilla** (non-GMS) build. If you want to include **Google Mobile Services (GMS)**, specify the variant:
+
+```bash
+axion <device_codename> <variant>
+```
+
+- **gms** → Includes **Google Mobile Services** (GApps).
+- **va** → Vanilla (GMS-free) build.
+
+**Example:**
+To build for a device with codename `panther` and include GMS:
+
+```bash
+axion panther gms
 ```
 
 ### 🔄 Syncing Source
