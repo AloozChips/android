@@ -127,14 +127,21 @@ By default, the build system compiles a **vanilla** (non-GMS) build. If you want
 axion <device_codename> <variant>
 ```
 
-- **gms** → Includes **Google Mobile Services** (GApps).
+- **gms core** → Includes **Google Mobile Services with Google Telephony** (GApps) (enabled by default if gms variant is unspecified).
+- **gms pico** → Includes **Minimal Google Mobile Services** (GApps).
 - **va** → Vanilla (GMS-free) build.
 
 **Example:**
-To build for a device with codename `panther` and include GMS:
+To build for a device with codename `panther` and include GMS pico:
 
 ```bash
-axion panther gms
+axion panther gms pico
+```
+
+To build for a device with codename `panther` with GMS removed:
+
+```bash
+axion panther va
 ```
 
 ### 🔄 Syncing Source
