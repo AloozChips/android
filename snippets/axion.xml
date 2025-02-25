@@ -36,6 +36,7 @@
   <remove-project path="frameworks/base" />
   <remove-project path="frameworks/libs/systemui" />
   <remove-project path="frameworks/native" />
+  <remove-project path="frameworks/opt/telephony" />
   <remove-project path="hardware/interfaces" />
   <remove-project path="hardware/google/graphics/common" />
   <remove-project path="hardware/google/pixel-sepolicy" />
@@ -101,6 +102,7 @@
   <project path="frameworks/base" name="android_frameworks_base" groups="pdk-cw-fs,pdk-fs,sysui-studio" remote="axion" />
   <project path="frameworks/libs/systemui" name="android_frameworks_libs_systemui" groups="pdk-cw-fs,pdk-fs,sysui-studio" remote="axion" />
   <project path="frameworks/native" name="android_frameworks_native" groups="pdk-cw-fs,pdk-fs,sysui-studio" remote="axion" />
+  <project path="frameworks/opt/telephony" name="android_frameworks_opt_telephony" groups="pdk" remote="axion" />
   
   <project path="hardware/interfaces" name="android_hardware_interfaces" groups="pdk,sysui-studio"  remote="axion" />
   <project path="hardware/google/graphics/common" name="android_hardware_google_graphics_common" groups="pdk-lassen,pdk-gs-arm" remote="axion" />
