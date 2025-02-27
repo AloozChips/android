@@ -60,6 +60,19 @@ AXION_MAINTAINER := rmp
 # Processor name (use "_" for spaces)
 AXION_PROCESSOR := Snapdragon_CPU_1
 ```
+
+### 🎵 ViperFX Integration
+
+To include **ViPER4AndroidFX**, enable the following flag in your device's `lineage_device.mk`:
+
+```make
+TARGET_INCLUDE_VIPERFX := true
+```
+
+By default, this flag is **disabled** (`false`). If enabled, make sure your device includes the necessary drivers and libraries.
+
+For full setup instructions, follow the [ViPER4AndroidFX ReadMe](https://github.com/AxionAOSP/android_packages_apps_ViPER4AndroidFX/blob/v4a/README.md).
+
 ---
 
 ### ⚡ Optional: Enabling `SCHED_DEBUG` for Kernel Scheduler Tuning
