@@ -75,6 +75,47 @@ For full setup instructions, follow the [ViPER4AndroidFX ReadMe](https://github.
 
 ---
 
+# ⚡ AxionOS CPU Flags
+
+AxionOS introduces specific CPU affinity settings to optimize system performance. These flags allow builders to define small and big core groups for scheduling critical processes like **SurfaceFlinger**, **HwComposer**, and **RenderEngine** to big cores.
+
+## 🔧 Defining CPU Core Groups in `lineage_device.mk`
+
+Builders **must** define the CPU core groups in their device tree:
+
+```make
+# Define small and big core groups
+AXION_CPU_SMALL_CORES := 0,1,2,3
+AXION_CPU_BIG_CORES := 4,5,6,7
+```
+
+**Do not use `?=` here**, to make sure that it overrides AxionOS defaults
+
+## 🚀 AxionOS Defaults
+
+AxionOS provides default values and assigns them to system properties:
+
+```make
+# Default core groups (if not overridden by the builder)
+AXION_CPU_SMALL_CORES ?= 0,1,2,3
+AXION_CPU_BIG_CORES ?= 4,5,6,7
+
+# AxionOS scheduling properties
+PRODUCT_SYSTEM_PROPERTIES += \
+    persist.sys.axion_cpu_big=$(AXION_CPU_BIG_CORES) \
+    persist.sys.axion_cpu_small=$(AXION_CPU_SMALL_CORES)
+```
+
+## 🏎️ Purpose
+
+These properties are used for:
+- **FIFO scheduling task placements**.
+- **Affining SurfaceFlinger, HwComposer, and RenderEngine to big cores**.
+
+If your device has a different core configuration, override the values in `lineage_device.mk`.
+
+---
+
 ### ⚡ Optional: Enabling `SCHED_DEBUG` for Kernel Scheduler Tuning
 
 For non-prebuilt/inline built kernels, you can optionally enable `CONFIG_SCHED_DEBUG` to allow AxionOS to tune scheduler behavior. This is particularly useful for AxionOS load balancing, task migration, and latency optimizations.
