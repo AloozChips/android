@@ -35,6 +35,7 @@
   <remove-project path="build/release" />
   <remove-project path="build/soong" />
   <remove-project path="device/lineage/sepolicy" />
+  <remove-project path="external/bouncycastle" />
   <remove-project path="frameworks/av" />
   <remove-project path="frameworks/base" />
   <remove-project path="frameworks/libs/systemui" />
@@ -90,6 +91,9 @@
   
   <!-- Device  -->
   <project path="device/lineage/sepolicy" name="android_device_lineage_sepolicy" remote="axion" />
+  
+  <!-- External  -->
+  <project path="external/bouncycastle" name="android_external_bouncycastle" groups="pdk" remote="axion" />
 
   <!-- Lineage SDK  -->
   <project path="lineage-sdk" name="android_lineage-sdk" remote="axion" />
