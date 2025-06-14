@@ -110,16 +110,23 @@ allow init <input_suspend_label>:file rw_file_perms;
 Builders **must** define the CPU core groups in their device tree:
 
 ```make
-# Define small and big core groups
+# Define small and big core groups (used for setting processes affinity)
 AXION_CPU_SMALL_CORES := 0,1,2,3
-AXION_CPU_BIG_CORES := 4,5,6,7 (builders can exclude prime clusters here)
-# Used by cpu limiter and performance mode
-# Background cores used for non-critical cpusets 
+# CPU used by critical tasks like SystemUI animations/surfaceflinger etc.
+AXION_CPU_BIG_CORES := 4,5 (builders can include prime cluster cores)
+
+## CPUsets configuration
+# CPUset used for non-critical cpusets 
 AXION_CPU_BG := 0-2
-# Background cores used for foreground cpusets
-AXION_CPU_FG := 0-5
-# CPU cores that will be used when limiting other cpusets except top-app
+# CPUset used for foreground cpusets
+AXION_CPU_FG ?= 0-7
+# CPUset that will be used when limiting other cpusets except top-app
 AXION_CPU_LIMIT_BG := 0-1
+# CPUset that will be used to unlimit critical cpusets for UI
+AXION_CPU_UNLIMIT_UI ?= 0-7
+# CPUset that will be used when limiting critical cpusets for UI
+AXION_CPU_LIMIT_UI ?= 0-4
+
 # Wether to enable debugging for adb logcat purposes
 AXION_DEBUGGING_ENABLED := true/false
 ```
@@ -133,10 +140,12 @@ AxionOS provides default values and assigns them to system properties:
 ```make
 # Default core groups (if not overridden by the builder)
 AXION_CPU_SMALL_CORES ?= 0,1,2,3
-AXION_CPU_BIG_CORES ?= 4,5,6,7
+AXION_CPU_BIG_CORES ?= 4,5
+AXION_CPU_UNLIMIT_UI ?= 0-7
 AXION_CPU_BG ?= 0-2
-AXION_CPU_FG ?= 0-5
+AXION_CPU_FG ?= 0-7
 AXION_CPU_LIMIT_BG ?= 0-1
+AXION_CPU_LIMIT_UI ?= 0-4
 AXION_DEBUGGING_ENABLED ?= false
 
 # AxionOS scheduling properties
@@ -146,13 +155,15 @@ PRODUCT_SYSTEM_PROPERTIES += \
     persist.sys.axion_cpu_bg=$(AXION_CPU_BG) \
     persist.sys.axion_cpu_limit_bg=$(AXION_CPU_LIMIT_BG) \
     persist.sys.axion_cpu_fg=$(AXION_CPU_FG) \
+    persist.sys.axion_cpu_limit_ui=$(AXION_CPU_LIMIT_UI) \
+    persist.sys.axion_cpu_unlimit_ui=$(AXION_CPU_UNLIMIT_UI) \
     ro.sys.axion_userdebug_enabled=$(AXION_DEBUGGING_ENABLED)
 ```
 
 ## 💡 Purpose
 
 These properties are used for:
-- **Determining wether to use FIFO or legacy boosting for scheduling**.
+- **Used by Boostframework**.
 - **Affining SurfaceFlinger, HwComposer, and RenderEngine to big cores**.
 
 If your device has a different core configuration, override the values in `lineage_device.mk`.
