@@ -116,7 +116,7 @@ AXION_CPU_SMALL_CORES := 0,1,2,3
 AXION_CPU_BIG_CORES := 4,5 (builders can include prime cluster cores)
 
 ## CPUsets configuration
-# CPUset used for non-critical cpusets 
+# CPUset used for bg/audio cpusets 
 AXION_CPU_BG := 0-2
 # CPUset used for foreground cpusets
 AXION_CPU_FG ?= 0-7
@@ -140,7 +140,7 @@ AxionOS provides default values and assigns them to system properties:
 ```make
 # Default core groups (if not overridden by the builder)
 AXION_CPU_SMALL_CORES ?= 0,1,2,3
-AXION_CPU_BIG_CORES ?= 4,5
+AXION_CPU_BIG_CORES ?= 4,5,6,7
 AXION_CPU_UNLIMIT_UI ?= 0-7
 AXION_CPU_BG ?= 0-2
 AXION_CPU_FG ?= 0-7
@@ -167,6 +167,70 @@ These properties are used for:
 - **Affining SurfaceFlinger, HwComposer, and RenderEngine to big cores**.
 
 If your device has a different core configuration, override the values in `lineage_device.mk`.
+
+# 🚀 Improving System Performance
+
+AxionOS promotes the use of **`libperfmgr`** over the traditional **QCOM Perf HAL** because `libperfmgr` hints are more flexible and easier to customize for specific use cases.
+
+Enhancing fling and scroll responsiveness can significantly improve user experience, particularly in animation-heavy apps and fast-scroll scenarios. AxionOS includes several key optimizations to address this.
+
+---
+
+## 1. `libperfmgr`-Based Fling and Scroll Optimizations
+
+AxionOS introduces custom performance hints to improve fling and scroll behavior, inspired by QCOM's performance strategies.
+
+### References
+- [Use efficient CPU frequencies for `FIXED_PERFORMANCE` hint](https://github.com/AxionAOSP-devices/android_device_google_raviole/commit/cee1e28a7fdebfe4327d4e70a14e71c663f94ce8)
+- [Use a more performant efficient freq for little cluster](https://github.com/AxionAOSP-devices/android_device_google_raviole/commit/21628b8188c19d5ef141d940c9fe1c7312ab0469)
+
+### How the Boost Works
+When a fling gesture or animation-heavy action (e.g., entering Quick Settings) is detected:
+- The system enters a combined **`LAUNCH` + `FIXED_PERFORMANCE`** mode.
+- These modes persist throughout the fling/animation duration, plus an additional **160ms** buffer (for fling).
+- Once the fling/animation ends, both hints are disabled.
+
+This approach boosts animation-critical resources like CPU/devfreq.
+
+> **Note:** Scrolling boosts are automatically disabled during game sessions, mirroring QCOM's behavior to avoid unnecessary resource contention.
+
+### Benefits
+- Smoother fling and scroll performance
+- Improved UI animation responsiveness
+- Reduced power consumption during scrolls by locking into efficient frequency ranges
+
+The reference uses efficiency curves derived from:
+- [kdrag0n/freqbench](https://github.com/kdrag0n/freqbench/blob/master/results/gs101/main/run.log) to pick optimal frequency ranges for the raviole's SoC (gs101).
+
+---
+
+## 2. Screen-Off & Idle Power Optimizations
+
+To reduce thermal buildup and improve deep sleep efficiency, AxionOS applies the **`LOW_POWER`** hint when the device enters screen-off states.
+
+### 🔗 Reference
+- [`LOW_POWER` hint usage on Pixel 7 (panther)](https://github.com/AxionAOSP-devices/android_device_google_pantah/blob/lineage-22.2/powerhint-panther.json#L1827)
+
+### Recommendations for Device Maintainers
+Device maintainers can further optimize the `LOW_POWER` hint to:
+- Lower idle frequencies across CPU/GPU
+- Encourage faster transition to **C1** or deeper sleep states
+- Reduce thermal trip points on Pixel/GS SoCs
+
+---
+
+### 📝 Summary
+
+| Feature                          | Description                                                       |
+|----------------------------------|-------------------------------------------------------------------|
+| `libperfmgr` fling/scroll boost | Uses `LAUNCH + FIXED_PERFORMANCE` for responsive scrolls         |
+| Game-aware behavior             | Disables scroll boosts during game sessions                      |
+| Efficient frequency tuning      | Uses real-world benchmarks to optimize power/performance tradeoffs |
+| `LOW_POWER` screen-off hint     | Reduces thermal and power draw during idle                       |
+
+---
+
+These optimizations are live by default on supported Pixel and Axion-supported devices. Builders are encouraged to fine-tune these power hints for their specific SoC behavior to get the best out of AxionOS.
 
 ## 📦 Including LOS Prebuilts
 Wether to include LineageOS prebuilt apps (false by default)
