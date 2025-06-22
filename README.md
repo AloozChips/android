@@ -113,7 +113,7 @@ Builders **must** define the CPU core groups in their device tree:
 # Define small and big core groups (used for setting processes affinity)
 AXION_CPU_SMALL_CORES := 0,1,2,3
 # CPU used by critical tasks like SystemUI animations/surfaceflinger etc.
-AXION_CPU_BIG_CORES := 4,5 (builders can include prime cluster cores)
+AXION_CPU_BIG_CORES := 4,5,6,7 (builders can include prime cluster cores)
 
 ## CPUsets configuration
 # CPUset used for bg/audio cpusets 
@@ -126,39 +126,16 @@ AXION_CPU_LIMIT_BG := 0-1
 AXION_CPU_UNLIMIT_UI ?= 0-7
 # CPUset that will be used when limiting critical cpusets for UI
 AXION_CPU_LIMIT_UI ?= 0-4
+# CPUset that will be used for critical display processes
+AXION_CPU_DISPLAY ?= 4-7
+# CPUset that will be used for audio processes e.g. audioserver
+AXION_CPU_AUDIO ?= 0-3
 
 # Wether to enable debugging for adb logcat purposes
 AXION_DEBUGGING_ENABLED := true/false
 ```
 
 **Do not use `?=` here**, to make sure that it overrides AxionOS defaults
-
-## 🚀 AxionOS Defaults
-
-AxionOS provides default values and assigns them to system properties:
-
-```make
-# Default core groups (if not overridden by the builder)
-AXION_CPU_SMALL_CORES ?= 0,1,2,3
-AXION_CPU_BIG_CORES ?= 4,5,6,7
-AXION_CPU_UNLIMIT_UI ?= 0-7
-AXION_CPU_BG ?= 0-2
-AXION_CPU_FG ?= 0-7
-AXION_CPU_LIMIT_BG ?= 0-1
-AXION_CPU_LIMIT_UI ?= 0-4
-AXION_DEBUGGING_ENABLED ?= false
-
-# AxionOS scheduling properties
-PRODUCT_SYSTEM_PROPERTIES += \
-    persist.sys.axion_cpu_big=$(AXION_CPU_BIG_CORES) \
-    persist.sys.axion_cpu_small=$(AXION_CPU_SMALL_CORES) \
-    persist.sys.axion_cpu_bg=$(AXION_CPU_BG) \
-    persist.sys.axion_cpu_limit_bg=$(AXION_CPU_LIMIT_BG) \
-    persist.sys.axion_cpu_fg=$(AXION_CPU_FG) \
-    persist.sys.axion_cpu_limit_ui=$(AXION_CPU_LIMIT_UI) \
-    persist.sys.axion_cpu_unlimit_ui=$(AXION_CPU_UNLIMIT_UI) \
-    ro.sys.axion_userdebug_enabled=$(AXION_DEBUGGING_ENABLED)
-```
 
 ## 💡 Purpose
 
