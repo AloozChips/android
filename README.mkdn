@@ -52,7 +52,7 @@ Optional flags:
   TARGET_INCLUDE_VIPERFX := true
   ```
   (Disabled by default. Requires proper drivers and libraries.)  
-  See the [ViPER4AndroidFX ReadMe](https://github.com/AxionAOSP/android_packages_apps_ViPER4AndroidFX/blob/v4a/README.md).
+  See the [ViPER4AndroidFX ReadMe](https://github.com/AxionAOSP/android_packages_apps_ViPER4AndroidFX/blob/lineage-23.1/README.md).
 
 - **Enable debugging**  
   ```make
@@ -155,7 +155,7 @@ persist.sys.perf.scroll_opt = true
 # 2 - Treat all apps as heavy for performance
 persist.sys.perf.scroll_opt.heavy_app = 2
 ```
-**Source:** [ScrollOptimizer.java](https://github.com/AxionAOSP/android_frameworks_base/blob/lineage-23.0/core/java/com/android/internal/util/ScrollOptimizer.java)
+**Source:** [ScrollOptimizer.java](https://github.com/AxionAOSP/android_frameworks_base/blob/lineage-23.1/core/java/com/android/internal/util/ScrollOptimizer.java)
 ---
 
 ## SEPolicy Adjustments
