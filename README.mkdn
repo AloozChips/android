@@ -92,6 +92,10 @@ You can enable or disable them in your device makefile:
 ```make
 # Charging
 BYPASS_CHARGE_SUPPORTED ?= false
+# Path for charge toggle
+BYPASS_CHARGE_TOGGLE_PATH ?= /sys/class/power_supply/battery/input_suspend
+# Path for level path in case device does not support charge toggle
+BYPASS_CHARGE_LEVEL_PATH ?= /sys/devices/platform/google,charger/charge_stop_level
 
 # CPU governor support
 PERF_GOV_SUPPORTED := false
@@ -112,11 +116,6 @@ TORCH_STR_SUPPORTED := false
 # doze fix
 # for devices with doze/sensor related issues 
 TARGET_NEEDS_DOZE_FIX := false
-
-# [experimental] userspace simple lmk trial version 
-# of https://github.com/kerneltoast/android_kernel_google_gs201/blob/16.0.0-sultan/drivers/android/simple_lmk.c ©kerneltoast
-# Targets devices with prebuilt kernels or uslmk support across kernels
-TARGET_USES_USLMK := false
 
 # do not enable TARGET_IS_LOW_RAM if your device ram is greater than 4gb
 # else OOM will most likely occur on operations where applications and camera can fill heap limit
