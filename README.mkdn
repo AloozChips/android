@@ -126,6 +126,10 @@ TARGET_NEEDS_DOZE_FIX := false
 # the processes that load of shared apk and the code cache is not shared.
 # Some notable apps that will be affected by this are gms and chrome.
 TARGET_IS_LOW_RAM ?= false
+
+# refresh rate list (optional) - defining this flags makes the controller skip the parsing of Display.Mode refresh rates
+# for supported refresh rates. The refresh rate controller will also assume that all the defined refresh rates are "supported"
+TARGET_SUPPORTED_REFRESH_RATES := 60,75,90,120,144
 ```
 
 - **Bypass Charging**: Allows charging while keeping the battery percentage fixed.  
