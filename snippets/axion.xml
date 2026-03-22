@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
 
+  <remote name="aloozchips"
+          fetch="https://github.com/AloozChips/"
+          sync-c="true"
+          sync-j="4"
+          revision="refs/heads/lineage-23.1"
+          review="review.lineageos.org" />
+
   <remote name="axion"
           fetch="https://github.com/AxionAOSP/"
           sync-c="true"
@@ -290,7 +297,7 @@
   <!-- Vendor  -->
   <project path="vendor/addons" name="android_vendor_addons" remote="axion" />
   <project path="vendor/gms" name="android_vendor_gms" remote="axion-gitlab" revision="lineage-23.1" />
-  <project path="vendor/lineage" name="android_vendor_lineage" remote="axion" />
+  <project path="vendor/lineage" name="android_vendor_lineage" remote="aloozchips" />
   <project path="vendor/official_devices" name="official_devices" remote="axion" revision="main" />
   <project path="vendor/qcom/opensource/commonsys-intf/display" name="android_vendor_qcom_opensource_display-commonsys-intf" groups="qcom,qssi" remote="axion" />
 </manifest>
